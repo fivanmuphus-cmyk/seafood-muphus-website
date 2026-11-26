@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /kelola-muphus
+
+# Saat website sudah tayang di domain asli, tambahkan baris berikut (ganti domainnya):
+# Sitemap: https://DOMAIN-ANDA/sitemap.xml
