@@ -17,12 +17,12 @@
 
 <x-page-banner page="tentang" title="Tentang Muphus" subtitle="PT. Indonesia Menembus Gravitasi (Seafood Muphus)" image="images/banner-tentang.jpg" />
 
-{{-- SEKILAS PROFIL: foto lebar (landscape) di atas, teks di bawah --}}
+{{-- SEKILAS PROFIL: foto lebar di atas, lalu judul dan teks ditumpuk ke bawah --}}
 <x-section class="crab-bg">
     {{-- Foto lebar di atas teks, berbingkai garis ganda --}}
     @if ($photo = $img('img_1', 'tentang-1.jpg'))
-        <div class="mb-12 border border-brand-600 bg-paper p-2 sm:p-3 lg:mb-16">
-            <div class="aspect-[4/3] overflow-hidden border border-brand-600 bg-paper sm:aspect-[16/9] lg:aspect-[21/9]">
+        <div class="mb-12 border border-line bg-paper p-2 sm:p-3 lg:mb-16">
+            <div class="aspect-[4/3] overflow-hidden border border-line bg-paper sm:aspect-[16/9] lg:aspect-[21/9]">
                 @if (str_ends_with($photo, '.jpg'))
                     <img src="{{ asset('images/' . $photo) }}" alt="Tim Seafood Muphus" loading="lazy" class="h-full w-full object-cover">
                 @else
@@ -32,38 +32,35 @@
         </div>
     @endif
 
-    <div class="relative">
+    <div class="relative mb-12 border-x border-line px-6 py-4 sm:px-10 lg:mb-16 lg:px-14 lg:py-6">
         {{-- Logo kepiting: tepat di tengah blok teks, sangat samar --}}
         <img src="{{ asset('images/logo-kepiting.svg') }}" alt="" aria-hidden="true" width="561" height="470"
              class="pointer-events-none absolute left-1/2 top-1/2 -z-10 w-[70%] max-w-[520px] -translate-x-1/2 -translate-y-1/2 select-none opacity-[.05]">
 
-        <div class="grid gap-10 lg:grid-cols-12 lg:gap-6">
-            <div class="lg:col-span-5">
-                <x-eyebrow>{{ Site::text('about.profile_eyebrow') }}</x-eyebrow>
-                <p class="t-body-lg text-ink-600">{{ Site::text('about.profile_company') }}</p>
-                <h2 class="t-h2 mt-6 max-w-[588px]">{{ Site::em('about.profile_title', 'text-brand-600') }}</h2>
+        {{-- Judul di atas, isi di bawah (satu kolom), di dalam garis tegak tipis kanan-kiri --}}
+        <div class="mx-auto max-w-[860px]">
+            <x-eyebrow>{{ Site::text('about.profile_eyebrow') }}</x-eyebrow>
+            <p class="t-body-lg text-ink-600">{{ Site::text('about.profile_company') }}</p>
+            <h2 class="t-h2 mt-6 max-w-[760px]">{{ Site::em('about.profile_title', 'text-brand-600') }}</h2>
+
+            <div class="t-body-lg mt-10 space-y-[30px] text-ink-600">
+                @foreach (Site::rows('about.profile_paragraphs', ['text']) as [$paragraph])
+                    <p>{!! nl2br(e($fill($paragraph))) !!}</p>
+                @endforeach
             </div>
 
-            <div class="lg:col-span-7">
-                <div class="t-body-lg space-y-[30px] text-ink-600">
-                    @foreach (Site::rows('about.profile_paragraphs', ['text']) as [$paragraph])
-                        <p>{!! nl2br(e($fill($paragraph))) !!}</p>
-                    @endforeach
-                </div>
-
-                <dl class="mt-10 border-y border-line">
-                    @foreach (Site::rows('about.facts', ['title', 'text']) as [$label, $value])
-                        <div class="flex items-baseline gap-6 py-4 first:border-b first:border-line">
-                            <dt class="t-badge w-[130px] shrink-0 tracking-[.14em] text-brand-600">{{ $label }}</dt>
-                            <dd class="t-body-sm text-ink-600">{{ $value }}</dd>
-                        </div>
-                    @endforeach
-                </dl>
-            </div>
+            <dl class="mt-10 border-y border-line">
+                @foreach (Site::rows('about.facts', ['title', 'text']) as [$label, $value])
+                    <div class="flex items-baseline gap-6 py-4 first:border-b first:border-line">
+                        <dt class="t-badge w-[130px] shrink-0 tracking-[.14em] text-brand-600">{{ $label }}</dt>
+                        <dd class="t-body-sm text-ink-600">{{ $value }}</dd>
+                    </div>
+                @endforeach
+            </dl>
         </div>
     </div>
 
-    <dl class="mt-16 grid border-y border-line sm:grid-cols-3">
+    <dl class="grid border-y border-line sm:grid-cols-3">
         @foreach ([
             [$branchCount, Site::text('about.stat_1_label')],
             [$stats['founded'], Site::text('about.stat_2_label')],
