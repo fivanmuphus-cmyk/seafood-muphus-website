@@ -11,7 +11,7 @@
 @endphp
 <section class="relative isolate overflow-hidden bg-brand-900">
     @if ($src)
-        <img src="{{ $src }}" alt="" class="absolute inset-0 -z-30 h-full w-full object-cover saturate-[.85]" fetchpriority="high" decoding="async" aria-hidden="true">
+        <img src="{{ $src }}" alt="{{ strip_tags($heading) }} | {{ config('muphus.name') }}" class="absolute inset-0 -z-30 h-full w-full object-cover saturate-[.85]" fetchpriority="high" decoding="async">
         {{-- Gradasi kiri ke kanan: 90% di kiri, 10% di kanan. --}}
         <div class="absolute inset-0 -z-20 bg-gradient-to-r from-brand-900/90 to-brand-900/10"></div>
     @endif

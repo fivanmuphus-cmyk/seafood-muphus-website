@@ -27,7 +27,7 @@
     {{-- Sama dengan Figma: foto tampil penuh, lalu lapisan hijau #0C3414 95% (kiri) ke 38% (kanan), sedikit lebih pekat dari Figma agar teks terbaca, dan pudar ke warna halaman di bawah. --}}
     <div class="absolute inset-0 -z-30 bg-brand-900"></div>
     @if ($heroImage)
-        <img src="{{ $heroImage }}" alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" decoding="async">
+        <img src="{{ $heroImage }}" alt="Hidangan seafood {{ config('muphus.name') }}" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" decoding="async">
     @endif
     <div class="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(12,52,20,.94)_0%,rgba(12,52,20,.78)_100%)] lg:bg-[linear-gradient(90deg,rgba(12,52,20,.95)_0%,rgba(12,52,20,.78)_45%,rgba(12,52,20,.38)_100%)]"></div>
     <div class="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-b from-paper/0 to-paper"></div>
