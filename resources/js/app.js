@@ -415,3 +415,72 @@ document.querySelectorAll('[data-menu-page]').forEach((root) => {
     // Tombol Kembali memulihkan halaman dari cache: matikan garisnya.
     window.addEventListener('pageshow', () => bar.classList.remove('is-active'));
 })();
+
+// Animasi saat digulir: bagian halaman muncul pelan (naik sedikit dan memudar) ketika masuk layar.
+// Otomatis untuk isi setiap bagian (kecuali bagian paling atas / hero), memakai transform dan opacity saja.
+// Dimatikan bila perangkat meminta "kurangi gerakan". Tanpa JavaScript, semua tampil biasa.
+// Untuk mengecualikan satu elemen, beri atribut data-no-reveal.
+(() => {
+    try {
+        const main = document.querySelector('main');
+        if (!main || !('IntersectionObserver' in window)) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        const sections = [...main.children].filter((el) => el.tagName === 'SECTION').slice(1);
+        const isGroup = (el) => el.matches('ol, ul, dl') || /(^|\s)([a-z0-9]+:)?grid(\s|$)/.test(el.className || '');
+        const skipTag = /^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT)$/;
+
+        const targets = [];
+        const collect = (list) => {
+            list.forEach((el, i) => {
+                if (skipTag.test(el.tagName) || el.hasAttribute('data-no-reveal')) return;
+                const position = getComputedStyle(el).position;
+                if (position === 'absolute' || position === 'fixed') return; // hiasan: tidak ikut dianimasikan
+                targets.push({ el, step: Math.min(i, 5) });
+            });
+        };
+
+        sections.forEach((section) => {
+            const box = section.firstElementChild?.matches('div') ? section.firstElementChild : section;
+            [...box.children].forEach((child) => {
+                if (skipTag.test(child.tagName) || child.hasAttribute('data-no-reveal')) return;
+                // Daftar dan kisi: anak-anaknya muncul bergantian. Selain itu, elemennya sendiri.
+                if (isGroup(child) && child.children.length > 1) {
+                    collect([...child.children]);
+                } else {
+                    collect([child]);
+                }
+            });
+        });
+
+        const viewport = window.innerHeight;
+        const pending = targets.filter(({ el }) => {
+            const rect = el.getBoundingClientRect();
+            return rect.top > viewport * 0.92; // yang sudah terlihat (atau sudah terlewat) dibiarkan
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                observer.unobserve(el);
+                el.classList.add('is-visible');
+                // Setelah selesai, lepas atribut supaya gaya asli elemen (hover dan lainnya) kembali normal.
+                setTimeout(() => {
+                    el.removeAttribute('data-reveal');
+                    el.classList.remove('is-visible');
+                    el.style.removeProperty('--reveal-delay');
+                }, 1100);
+            });
+        }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+
+        pending.forEach(({ el, step }) => {
+            el.setAttribute('data-reveal', '');
+            el.style.setProperty('--reveal-delay', `${step * 90}ms`);
+            observer.observe(el);
+        });
+    } catch (e) {
+        // Bila ada kendala, biarkan semua tampil tanpa animasi.
+        document.querySelectorAll('[data-reveal]').forEach((el) => el.removeAttribute('data-reveal'));
+    }
+})();

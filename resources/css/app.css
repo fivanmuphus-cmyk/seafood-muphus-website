@@ -249,3 +249,16 @@ html.preloader-lock { overflow: hidden; }
   from { transform: scale(1.12) translate3d(-3%, 1.5%, 0); }
   to   { transform: scale(1.12) translate3d(3%, -1.5%, 0); }
 }
+/* ---------- Animasi saat digulir ----------
+   Ditambahkan lewat JavaScript (lihat bagian akhir app.js): elemen naik sedikit dan memudar masuk.
+   Atribut data-reveal dilepas setelah selesai, jadi tidak mengganggu gaya hover elemen. */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition: opacity .7s cubic-bezier(.2, .7, .2, 1) var(--reveal-delay, 0ms),
+              transform .7s cubic-bezier(.2, .7, .2, 1) var(--reveal-delay, 0ms);
+}
+[data-reveal].is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
