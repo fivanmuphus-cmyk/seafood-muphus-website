@@ -39,8 +39,7 @@ class PageBannerForm
                         ->imageResizeMode('cover')
                         ->imageResizeTargetWidth('2400')
                         ->imageResizeTargetHeight('1100')
-                        ->rules(['dimensions:min_width=1600,min_height=730'])
-                        ->helperText('Ukuran 2400 × 1100 px, JPG atau WebP, maksimal 10 MB (otomatis dikompres ke WebP). Taruh objek utama (hidangan atau suasana tenda) di SISI KANAN, karena teks berada di kiri. Kosongkan untuk hero tanpa foto.')
+                        ->helperText('Ukuran ideal 2400 × 1100 px (foto lebih kecil tetap bisa, tapi kurang tajam), JPG, PNG atau WebP, maksimal 10 MB (otomatis dikompres ke WebP). Taruh objek utama (hidangan atau suasana tenda) di SISI KANAN, karena teks berada di kiri. Kosongkan untuk hero tanpa foto.')
                         ->columnSpanFull(),
                 ]),
 
@@ -58,6 +57,7 @@ class PageBannerForm
                     FileUpload::make('image_path')
                         ->label('Foto banner')
                         ->image()
+                        ->saveUploadedFileUsing(\App\Support\ImageOptimizer::saver('banners', 2400, 80))
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                         ->maxSize(10240)
                         ->disk('public')
@@ -69,8 +69,7 @@ class PageBannerForm
                         ->imageResizeMode('cover')
                         ->imageResizeTargetWidth('2400')
                         ->imageResizeTargetHeight('600')
-                        ->rules(['dimensions:min_width=1600,min_height=400'])
-                        ->helperText('Ukuran 2400 × 600 px (rasio 4:1), JPG atau WebP, maksimal 10 MB (otomatis dikompres ke WebP). Taruh objek penting di tengah bagian atas: bagian bawah memudar dan sisi kanan tertutup logo. Kosongkan untuk banner tanpa foto.')
+                        ->helperText('Ukuran ideal 2400 × 600 px (rasio 4:1; foto lebih kecil tetap bisa, tapi kurang tajam), JPG, PNG atau WebP, maksimal 10 MB (otomatis dikompres ke WebP). Taruh objek penting di tengah bagian atas: bagian bawah memudar dan sisi kanan tertutup logo. Kosongkan untuk banner tanpa foto.')
                         ->columnSpanFull(),
                     TextInput::make('title')
                         ->label('Judul (opsional)')
